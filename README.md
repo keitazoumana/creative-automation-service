@@ -177,27 +177,44 @@ s3://YOUR-BUCKET-NAME/output/
 
 ## 🏗️ Architecture
 
-```
-Campaign JSON Upload
-        ↓
-    S3 Bucket
-        ↓ (Event Notification)
-    SQS Queue
-        ↓ (Trigger)
-┌───────────────────┐
-│ Lambda 1: Parser  │ Validates JSON, creates manifest
-└────────┬──────────┘
-         ↓
-┌────────────────────┐
-│ Lambda 2: Generator│ Calls Bedrock Titan, generates AI image
-└────────┬───────────┘
-         ↓
-┌────────────────────┐
-│ Lambda 3: Variants │ Creates 5 social media formats + overlays
-└────────┬───────────┘
-         ↓
-    S3 Output Folder (campaign results)
-```
+![Creative Automation Architecture](docs/images/Architecture.png)
+
+### Processing Flow
+
+**Step 1: Campaign Upload**
+- Business users upload campaign brief JSON via S3
+- Brief contains product descriptions, target audience, and brand guidelines
+
+**Step 2: S3 Storage & Event Trigger**
+- Campaign briefs saved to S3 bucket (inputs/ folder)
+- S3 event notification triggers SQS queue for decoupled processing
+
+**Step 3: Campaign Brief Parser (Lambda)**
+- Validates JSON schema and extracts product details
+- Checks for existing assets to reuse
+- Creates campaign manifest with metadata
+- Invokes image generator for each product
+
+**Step 4: Campaign Image Generator (Lambda)**
+- Sends product descriptions to AWS Bedrock Titan Image Generator v1
+- Generates AI-powered product images (1024×1024 PNG)
+- Pulls Docker images from ECR
+- Saves generated assets to S3
+- Invokes variants generator
+
+**Step 5: Campaign Variants Generator (Lambda)**
+- Processes generated images into 5 social media formats
+- Adds text overlays with campaign message and brand colors
+- Creates platform-specific variants (Instagram, Facebook, Twitter, LinkedIn)
+- Saves variants as JPEGs to S3
+- Updates manifest with completion status
+
+**Step 6: Output & Results**
+- Completed campaign assets organized in S3 output folder
+- Campaign metadata with costs and processing time
+- Generated base images (1024×1024 PNG)
+- Social media variants (5 aspect ratios per product)
+- Users retrieve results via Streamlit dashboard or AWS CLI
 
 **Lambda Functions:**
 
