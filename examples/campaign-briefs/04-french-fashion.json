@@ -1,0 +1,25 @@
+{
+  "campaign_name": "Collection Automne Paris",
+  "campaign_message": "Découvrez l'élégance française",
+  "target_audience": "Professionnels aisés et passionnés de mode, âgés de 30 à 50 ans, qui apprécient le luxe français et l'élégance intemporelle",
+  "brand_colors": ["#002395", "#FFFFFF", "#ED2939"],
+  "target_regions": ["FR", "BE", "CH", "CA"],
+  "products": [
+    {
+      "name": "Parfum Élégance",
+      "description": "Parfum de luxe aux notes florales, bouteille en cristal gravée, design minimaliste français, essence de jasmin et rose"
+    },
+    {
+      "name": "Sac à Main Cuir",
+      "description": "Sac à main en cuir véritable italien, coutures à la main, style parisien classique, couleur cognac"
+    },
+    {
+      "name": "Montre Luxe Parisienne",
+      "description": "Montre-bracelet en or rose, cadran minimaliste, mouvement suisse, bracelet en cuir, édition limitée inspirée de l'architecture parisienne"
+    },
+    {
+      "name": "Écharpe en Soie",
+      "description": "Écharpe 100% soie, imprimé artistique de style impressionniste, fabriquée à Lyon, finitions roulottées à la main, couleurs automnales"
+    }
+  ]
+}

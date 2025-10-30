@@ -1,0 +1,17 @@
+{
+  "campaign_name": "Nike Air Max Spring Launch",
+  "campaign_message": "Step into Spring with Comfort and Style",
+  "target_audience": "Active lifestyle enthusiasts aged 18-35 who value both performance and street style",
+  "brand_colors": ["#FF6B35", "#004E89", "#FFFFFF"],
+  "target_regions": ["US", "CA", "UK"],
+  "products": [
+    {
+      "name": "Nike Air Max 270",
+      "description": "Premium running shoe with visible Air unit, breathable mesh upper in white and blue colorway, modern athletic design"
+    },
+    {
+      "name": "Nike Air Max 90",
+      "description": "Classic retro running shoe with iconic design, leather and mesh construction, timeless comfort and style"
+    }
+  ]
+}

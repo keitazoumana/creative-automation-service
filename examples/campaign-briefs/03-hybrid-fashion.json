@@ -1,0 +1,18 @@
+{
+  "campaign_name": "Zara Summer Fashion Collection 2025",
+  "campaign_message": "Embrace Effortless Elegance This Summer",
+  "target_audience": "Fashion-forward women aged 25-45 who seek affordable luxury and contemporary European style",
+  "brand_colors": ["#E8DFD0", "#2D2D2D", "#A0836B"],
+  "target_regions": ["US", "UK", "FR", "IT", "ES"],
+  "products": [
+    {
+      "name": "Linen Blazer",
+      "description": "Beige oversized linen blazer with notched lapels and rolled sleeves, elegant summer style",
+      "existing_assets": "zara/summer-2025/blazer/"
+    },
+    {
+      "name": "White Cotton Dress",
+      "description": "Flowing midi-length white cotton dress with embroidered details and bohemian aesthetic"
+    }
+  ]
+}
