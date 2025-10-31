@@ -174,12 +174,20 @@ Before deployment, ensure:
 
 ### Step 1: Enable Amazon Bedrock Model Access
 
+**In AWS Console:**
+
+1. Search for "Bedrock" in the AWS Console search bar
+2. In the bottom left, under "Configuration and learn", select **Model access**
+3. From that page, select **"Model catalog"**
+4. Under "Providers", select **"Amazon"**
+5. Under "Modality", select **"Images"**
+6. Choose **"Titan Image Generator G1"**
+7. Click **"Request model access"** (approval is usually instant)
+8. Wait ~2-5 minutes for status to change to **"Access granted"**
+
+**Verify access:**
 ```bash
-# In AWS Console → Amazon Bedrock → Model Access
-# 1. Navigate to "Model access" in left sidebar
-# 2. Click "Manage model access"
-# 3. Enable: amazon.titan-image-generator-v1
-# 4. Wait ~5 minutes for "Access granted" status
+aws bedrock list-foundation-models --region us-east-1 | grep titan-image
 ```
 
 ### Step 2: Configure AWS Credentials
