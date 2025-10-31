@@ -261,6 +261,19 @@ terraform plan -var-file="environments/dev.tfvars"
 ./deploy.sh -auto-approve
 ```
 
+**If you encounter "already exists" errors** (ECR repositories or IAM roles already created):
+
+```bash
+# Run the import script to add existing resources to Terraform state
+# This prevents Terraform from trying to recreate them
+
+# On Linux/Mac/Git Bash:
+./import-existing-resources.sh
+
+# Then retry deployment:
+./deploy.sh -auto-approve
+```
+
 **This deployment:**
 - Uses the Docker images pushed in Step 4
 - Creates all AWS infrastructure from scratch
