@@ -261,7 +261,12 @@ terraform plan -var-file="environments/dev.tfvars"
 ./deploy.sh -auto-approve
 ```
 
-**If you encounter "already exists" errors** (ECR repositories or IAM roles already created):
+**If you encounter "already exists" errors** (resources were created in previous attempts):
+
+The import script will automatically import ALL existing AWS resources into Terraform state. You only need to specify the environment once, and it will:
+- Read configuration from your tfvars file (no need to enter account ID, bucket name, etc.)
+- Import all existing resources (ECR, IAM, S3, SQS, Lambda, CloudWatch, etc.)
+- Skip resources already in Terraform state
 
 ```bash
 # Run the import script to add existing resources to Terraform state
@@ -269,6 +274,8 @@ terraform plan -var-file="environments/dev.tfvars"
 
 # On Linux/Mac/Git Bash:
 ./import-existing-resources.sh
+# Enter environment when prompted (dev/staging/production)
+# Confirm with 'y' to proceed
 
 # Then retry deployment:
 ./deploy.sh -auto-approve
