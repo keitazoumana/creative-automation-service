@@ -177,6 +177,7 @@ Before deployment, ensure:
 cd terraform
 rm -f terraform.tfstate terraform.tfstate.backup
 rm -rf .terraform/
+# Keep .terraform.lock.hcl - it locks provider versions for consistency
 ```
 
 ### Step 1: Enable Amazon Bedrock Model Access
