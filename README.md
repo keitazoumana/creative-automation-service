@@ -282,6 +282,10 @@ cd ..
 - Image preview and bulk download
 - Cost tracking per campaign
 
+**Dashboard in Action:**
+
+![Dashboard Animation](docs/images/creative-automation-service.gif)
+
 #### Option 2: AWS CLI (For Automation & Developers)
 
 **Upload campaign brief directly to S3:**
@@ -539,15 +543,6 @@ Zoumana KEITA
 For questions or feedback:
 - Open an issue on GitHub
 - Connect with me on LinkedIn
-
----
-
-## Dashboard Animation
--------------------------------------------------------------------------------
-
-Below is a GIF showcasing the Streamlit dashboard in action:
-
-![Dashboard Animation](docs/images/creative-automation-service.gif)
 
 ---
 
