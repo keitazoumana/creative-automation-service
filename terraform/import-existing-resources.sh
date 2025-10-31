@@ -98,7 +98,7 @@ import_resource() {
     
     # Try to import
     echo -e "${YELLOW}Importing: ${resource_id}${NC}"
-    if terraform import "${resource_type}.${resource_name}" "${resource_id}" 2>&1 | grep -q "successfully"; then
+    if terraform import -input=false "${resource_type}.${resource_name}" "${resource_id}" 2>&1 | tee /tmp/import_output.log | grep -q "successfully"; then
         echo -e "${GREEN}✓ Successfully imported${NC}"
         return 0
     else
@@ -148,6 +148,7 @@ import_resource "aws_sqs_queue_policy" "allow_s3" "$QUEUE_URL"
 echo -e "\n${GREEN}========================================${NC}"
 echo -e "${GREEN}Step 5: Import Lambda Functions${NC}"
 echo -e "${GREEN}========================================${NC}"
+echo -e "${YELLOW}Note: Lambda imports may take 1-2 minutes each (large container images)${NC}"
 
 import_resource "aws_lambda_function" "parser" "${ENVIRONMENT}-${PROJECT_NAME}-parser"
 import_resource "aws_lambda_function" "generator" "${ENVIRONMENT}-${PROJECT_NAME}-generator"
