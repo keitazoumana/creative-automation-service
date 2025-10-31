@@ -8,14 +8,11 @@
 ## Introduction
 -------------------------------------------------------------------------------
 
-
-Overview
--------------------------------------------------------------------------------
+### Overview
 
 Creative Automation Service is a fully serverless AWS solution that automatically generates professional social media campaign assets using AI. Upload a campaign brief JSON file, and the system produces multiple platform-optimized images with branded overlays—all tracked with detailed cost analytics.
 
-What It Does
--------------------------------------------------------------------------------
+### What It Does
 
 1. Upload campaign brief (JSON) with product names and descriptions
 2. Generate AI images using Amazon Bedrock Titan Image Generator ($0.04/image)
@@ -24,8 +21,7 @@ What It Does
 
 Performance: ~30 seconds per product | Cost: ~$0.05 per product
 
-Key Features
--------------------------------------------------------------------------------
+### Key Features
 
 - Fully Serverless: Built on AWS Lambda, S3, SQS, and Bedrock
 - AI-Powered: Uses Amazon Bedrock Titan Image Generator for high-quality images
@@ -34,8 +30,7 @@ Key Features
 - Streamlit Dashboard: User-friendly web interface for campaign management
 - Infrastructure as Code: Full Terraform deployment for reproducibility
 
-Use Cases
--------------------------------------------------------------------------------
+### Use Cases
 
 - Marketing teams launching multi-product campaigns
 - E-commerce businesses creating product showcases
@@ -44,15 +39,12 @@ Use Cases
 
 ---
 
-
--------------------------------------------------------------------------------
-High-Level Architecture
+## High-Level Architecture
 -------------------------------------------------------------------------------
 
 ![Creative Automation Architecture](docs/images/Architecture.png)
 
-System Components
--------------------------------------------------------------------------------
+### System Components
 
 ```
 Campaign Brief (JSON)
@@ -88,9 +80,7 @@ Campaign Brief (JSON)
 ```
 
 
--------------------------------------------------------------------------------
-Processing Flow Details
--------------------------------------------------------------------------------
+### Processing Flow Details
 
 **Step 1: Campaign Upload**
 - Business users upload campaign brief JSON via S3
@@ -140,10 +130,7 @@ Lambda Functions Specifications
 
 **Total Cost per Product**: ~$0.05 (AI generation + processing + storage)
 
-
--------------------------------------------------------------------------------
-Technology Stack
--------------------------------------------------------------------------------
+### Technology Stack
 
 - **Compute**: AWS Lambda (Python 3.11) with Docker containers
 - **AI/ML**: Amazon Bedrock (Titan Image Generator v1)
@@ -156,10 +143,10 @@ Technology Stack
 
 ---
 
+## Prerequisites
+-------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------
-Prerequisites
--------------------------------------------------------------------------------
+### Required Tools & Accounts
 
 1. **AWS Account** with access to:
    - Amazon Bedrock (Titan Image Generator)
@@ -171,9 +158,7 @@ Prerequisites
    - [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Container runtime
    - [Python 3.11+](https://www.python.org/downloads/) - For local development & dashboard
 
-
-AWS Configuration
--------------------------------------------------------------------------------
+### AWS Configuration
 
 Before deployment, ensure:
 - AWS account has permissions for Lambda, S3, SQS, ECR, IAM, Bedrock
@@ -182,14 +167,12 @@ Before deployment, ensure:
 
 ---
 
+---
 
--------------------------------------------------------------------------------
-How to Use
+## How to Use
 -------------------------------------------------------------------------------
 
-
-Step 1: Enable Amazon Bedrock Model Access
--------------------------------------------------------------------------------
+### Step 1: Enable Amazon Bedrock Model Access
 
 ```bash
 # In AWS Console → Amazon Bedrock → Model Access
@@ -199,9 +182,7 @@ Step 1: Enable Amazon Bedrock Model Access
 # 4. Wait ~5 minutes for "Access granted" status
 ```
 
-
-Step 2: Configure AWS Credentials
--------------------------------------------------------------------------------
+### Step 2: Configure AWS Credentials
 
 ```bash
 aws configure
@@ -214,9 +195,7 @@ aws configure
 aws sts get-caller-identity
 ```
 
-
-Step 3: Clone Repository and Configure
--------------------------------------------------------------------------------
+### Step 3: Clone Repository and Configure
 
 ```bash
 git clone https://github.com/keitazoumana/creative-automation-service.git
@@ -235,15 +214,25 @@ aws_region     = "us-east-1"
 s3_bucket_name = "creative-automation-yourname-2025"  # Must be globally unique
 ```
 
-
-Step 4: Deploy Infrastructure with Terraform
--------------------------------------------------------------------------------
+### Step 4: Build and Push Lambda Containers
 
 ```bash
-cd terraform
-terraform init
-terraform plan -var-file="environments/dev.tfvars"
-terraform apply -var-file="environments/dev.tfvars" -auto-approve
+cd scripts
+./build-and-push.sh dev v1.0.0
+```
+
+**This will:**
+- Build 3 Docker container images
+- Push to ECR with versioned tags
+- Update Lambda functions with new images
+
+Expected time: ~5-10 minutes (first build)
+
+### Step 5: Deploy Infrastructure with Terraform
+
+```bash
+cd ../terraform
+./deploy.sh dev --auto-approve
 ```
 
 **Deployment creates:**
@@ -254,43 +243,21 @@ terraform apply -var-file="environments/dev.tfvars" -auto-approve
 - IAM roles and policies
 - CloudWatch log groups
 
-⏱️ **Expected time**: ~3 minutes
+Expected time: ~3 minutes
 
-
-Step 5: Build and Push Lambda Containers
--------------------------------------------------------------------------------
+### Step 6: Launch Streamlit Dashboard
 
 ```bash
 cd ..
-./scripts/build-and-push.sh dev v1.0.0
-```
-
-**This will:**
-- Build 3 Docker container images
-- Push to ECR with versioned tags
-- Update Lambda functions with new images
-
-⏱️ **Expected time**: ~5-10 minutes (first build)
-
-
-Step 6: Launch Streamlit Dashboard
--------------------------------------------------------------------------------
-
-```bash
 ./run-dashboard.sh
 # Opens at http://localhost:8501
 ```
 
 ---
 
+### Usage Options
 
--------------------------------------------------------------------------------
-Usage Options
--------------------------------------------------------------------------------
-
-
-Option 1: Streamlit Dashboard (Recommended for Business Users)
--------------------------------------------------------------------------------
+#### Option 1: Streamlit Dashboard (Recommended for Business Users)
 
 **Launch the dashboard:**
 ```bash
@@ -299,25 +266,23 @@ Option 1: Streamlit Dashboard (Recommended for Business Users)
 
 **Workflow:**
 1. Open `http://localhost:8501` in your browser
-2. Navigate to **"📝 Create Campaign"** tab
+2. Navigate to "Create Campaign" tab
 3. Choose one of:
    - **Upload JSON file** - Upload pre-prepared campaign brief
    - **Use form builder** - Fill out campaign details interactively
    - **Select template** - Start from example campaign
-4. Click **"🚀 Launch Campaign"**
-5. Monitor progress in **"📊 Track Progress"** tab
-6. View and download results in **"🖼️ View Results"** tab
+4. Click "Launch Campaign"
+5. Monitor progress in "Track Progress" tab
+6. View and download results in "View Results" tab
 
 **Dashboard Features:**
-- 📊 Real-time metrics (campaigns, costs, products)
-- 📝 Interactive campaign builder with validation
-- 📊 Live Lambda logs with filtering
-- 🖼️ Image preview and bulk download
-- 💰 Cost tracking per campaign
+- Real-time metrics (campaigns, costs, products)
+- Interactive campaign builder with validation
+- Live Lambda logs with filtering
+- Image preview and bulk download
+- Cost tracking per campaign
 
-
-Option 2: AWS CLI (For Automation & Developers)
--------------------------------------------------------------------------------
+#### Option 2: AWS CLI (For Automation & Developers)
 
 **Upload campaign brief directly to S3:**
 ```bash
@@ -335,9 +300,7 @@ aws s3 ls s3://YOUR-BUCKET-NAME/output/
 aws s3 sync s3://YOUR-BUCKET-NAME/output/campaign-name-timestamp/ ./local-results/
 ```
 
-
-Option 3: Try Example Campaigns
--------------------------------------------------------------------------------
+#### Option 3: Try Example Campaigns
 
 **Pre-built examples in `examples/campaign-briefs/`:**
 
@@ -361,10 +324,7 @@ aws s3 cp examples/campaign-briefs/04-french-fashion.json \
 
 ---
 
-
--------------------------------------------------------------------------------
-Campaign Brief Format
--------------------------------------------------------------------------------
+### Campaign Brief Format
 
 **Minimum Required Fields:**
 
@@ -402,8 +362,7 @@ Campaign Brief Format
 
 
 -------------------------------------------------------------------------------
-Output Structure
--------------------------------------------------------------------------------
+### Output Structure
 
 **Generated S3 folder structure:**
 
@@ -452,10 +411,7 @@ s3://YOUR-BUCKET-NAME/output/
 
 ---
 
-
--------------------------------------------------------------------------------
-Monitoring & Troubleshooting
--------------------------------------------------------------------------------
+### Monitoring & Troubleshooting
 
 #### View Real-Time Logs
 
@@ -511,10 +467,9 @@ aws sqs receive-message --queue-url <DLQ_URL> --max-number-of-messages 10
 
 ---
 
+---
 
--------------------------------------------------------------------------------
-Cost Management
--------------------------------------------------------------------------------
+### Cost Management
 
 **Cost Breakdown (per 2-product campaign):**
 
@@ -528,10 +483,10 @@ Cost Management
 | **Total** | | **~$0.10** |
 
 **Cost Optimization Tips:**
-- ✅ Use `existing_asset_url` to reuse images → Saves 97% ($0.01 vs $0.04)
-- ✅ Batch multiple products in single campaign
-- ✅ Set CloudWatch log retention to 7 days (reduce storage costs)
-- ✅ Delete old campaign outputs from S3 after archiving
+- Use `existing_asset_url` to reuse images → Saves 97% ($0.01 vs $0.04)
+- Batch multiple products in single campaign
+- Set CloudWatch log retention to 7 days (reduce storage costs)
+- Delete old campaign outputs from S3 after archiving
 
 **Pricing References:**
 - Bedrock Titan: https://umbrellacost.com/blog/aws-bedrock-pricing/
@@ -540,10 +495,7 @@ Cost Management
 
 ---
 
-
--------------------------------------------------------------------------------
-Cleanup & Uninstallation
--------------------------------------------------------------------------------
+### Cleanup & Uninstallation
 
 **To remove all resources:**
 
@@ -575,9 +527,9 @@ aws ecr batch-delete-image \
 
 ---
 
+---
 
--------------------------------------------------------------------------------
-Contact
+## Contact
 -------------------------------------------------------------------------------
 
 Zoumana KEITA
@@ -590,23 +542,21 @@ For questions or feedback:
 
 ---
 
-
--------------------------------------------------------------------------------
-Dashboard Animation
+## Dashboard Animation
 -------------------------------------------------------------------------------
 
 Below is a GIF showcasing the Streamlit dashboard in action:
 
 ![Dashboard Animation](docs/images/creative-automation-service.gif)
 
--------------------------------------------------------------------------------
-Additional Resources
+---
+
+## Additional Resources
 -------------------------------------------------------------------------------
 
 ### Documentation
 
 - **[Project Repository](https://github.com/keitazoumana/creative-automation-service)** - Full source code
-- **[STREAMLIT.md](STREAMLIT.md)** - Complete dashboard user guide
 - **Campaign Brief Examples** - `examples/campaign-briefs/` directory
 
 ### AWS Resources
