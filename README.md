@@ -167,10 +167,17 @@ Before deployment, ensure:
 
 ---
 
----
-
 ## How to Use
 -------------------------------------------------------------------------------
+
+**Fresh Deployment:** If you've manually deleted AWS resources or deploying for the first time, follow all steps below in order. The scripts handle creating resources automatically.
+
+**Important:** If you have existing Terraform state files (terraform.tfstate), you should clean them before fresh deployment:
+```bash
+cd terraform
+rm -f terraform.tfstate terraform.tfstate.backup
+rm -rf .terraform/
+```
 
 ### Step 1: Enable Amazon Bedrock Model Access
 
@@ -224,17 +231,24 @@ s3_bucket_name = "creative-automation-yourname-2025"  # Must be globally unique
 
 ### Step 4: Build and Push Lambda Containers
 
+**Important:** This step creates ECR repositories if they don't exist, then builds and pushes Docker images.
+
 ```bash
 cd scripts
 ./build-and-push.sh dev v1.0.0
 ```
 
-**This will:**
-- Build 3 Docker container images
-- Push to ECR with versioned tags
-- Update Lambda functions with new images
+**This will automatically:**
+- Create 3 ECR repositories (if they don't exist)
+- Build 3 Docker container images (parser, generator, variants)
+- Push images to ECR with versioned tags (v1.0.0, v1.0.0-timestamp, latest)
 
 Expected time: ~5-10 minutes (first build)
+
+**Troubleshooting:**
+- If you see "repository does not exist" errors, the script will automatically create them
+- On Windows, use Git Bash or WSL to run the shell script
+- Ensure Docker Desktop is running before executing
 
 ### Step 5: Deploy Infrastructure with Terraform
 
@@ -243,11 +257,22 @@ cd ../terraform
 ./deploy.sh dev --auto-approve
 ```
 
+**This deployment:**
+- Uses the Docker images pushed in Step 4
+- Creates all AWS infrastructure from scratch
+
 **Deployment creates:**
 - 1 S3 bucket (campaign storage)
 - 1 SQS queue (+ Dead Letter Queue)
-- 3 ECR repositories (Docker images)
-- 3 Lambda functions (parser, generator, variants)
+- 3 ECR repositories (already created in Step 4, Terraform will import them)
+- 3 Lambda functions (parser, generator, variants) pointing to ECR images
+- IAM roles and policies
+- CloudWatch log groups
+- S3 event notifications
+
+Expected time: ~3 minutes
+
+**Note:** Since you manually deleted resources, Terraform will create everything fresh. If you see any "already exists" warnings for ECR repositories, that's normal - they were created in Step 4.
 - IAM roles and policies
 - CloudWatch log groups
 
