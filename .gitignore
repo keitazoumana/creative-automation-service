@@ -70,9 +70,3 @@ temp/
 # OS
 Thumbs.db
 .DS_Store
-
-# Project specific
-terraform/environments/*.tfvars
-!terraform/environments/dev.tfvars.example
-!terraform/environments/staging.tfvars.example
-!terraform/environments/production.tfvars.example
