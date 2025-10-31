@@ -235,14 +235,13 @@ s3_bucket_name = "creative-automation-yourname-2025"  # Must be globally unique
 **Important:** This step creates ECR repositories if they don't exist, then builds and pushes Docker images.
 
 ```bash
-cd scripts
-./build-and-push.sh dev v1.0.0
+./scripts/build-and-push.sh dev 1.1.3
 ```
 
 **This will automatically:**
 - Create 3 ECR repositories (if they don't exist)
 - Build 3 Docker container images (parser, generator, variants)
-- Push images to ECR with versioned tags (v1.0.0, v1.0.0-timestamp, latest)
+- Push images to ECR with versioned tags (1.1.3, 1.1.3-timestamp, latest)
 
 Expected time: ~5-10 minutes (first build)
 
@@ -253,9 +252,13 @@ Expected time: ~5-10 minutes (first build)
 
 ### Step 5: Deploy Infrastructure with Terraform
 
+**Important:** Initialize Terraform and review the deployment plan before applying.
+
 ```bash
-cd ../terraform
-./deploy.sh dev --auto-approve
+cd terraform
+terraform init
+terraform plan -var-file="environments/dev.tfvars"
+./deploy.sh -auto-approve
 ```
 
 **This deployment:**
